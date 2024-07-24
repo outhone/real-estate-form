@@ -1,73 +1,144 @@
 <script setup lang="ts">
 import InputText from '@/components/FormElements/InputText.vue'
 import InputYesNo from '@/components/FormElements/InputYesNo.vue'
+import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import { ref } from 'vue'
-const personalInformation = ref({
-  Q1: '',
-  Q2: '',
-  Q3: '',
-  Q4: '',
-  Q5: '',
-  Q6: '',
-  Q7: '',
-  Q8: '',
-  Q9: '',
-  Q10: '',
-  Q11: '',
-  Q10_2: '',
-  Q12: '',
-  Q13: '',
-  Q10_3: ''
+const form = ref({
+  Q1: {
+    question_details: `What is your full legal name?`,
+    answer: ''
+  },
+  Q2: {
+    question_details: `What is your birth year?`,
+    answer: ''
+  },
+  Q3: {
+    question_details: `What is your marital status? (Single, Married, Divorced, Widowed, Domestic Partner)`,
+    answer: ''
+  },
+  Q4: {
+    question_details: `Do you have any children? (Yes, No)`,
+    answer: ''
+  },
+  Q5: {
+    question_details: `What is your partner's full legal name?`,
+    answer: ''
+  },
+  Q6: {
+    question_details: `What is your partner's birth year?`,
+    answer: ''
+  },
+  Q7: {
+    question_details: `How many children do you have?`,
+    answer: ''
+  },
+  Q8: {
+    question_details: `Do you or your partner (if not single) own your primary residence? (Yes, No)`,
+    answer: ''
+  },
+  Q9: {
+    question_details: `Is your primary residence also your preferred mailing address? (Yes, No)`,
+    answer: ''
+  },
+  Q10: {
+    question_details: `What is the approximate value of your real estate?`,
+    answer: ''
+  },
+  Q11: {
+    question_details: `Do you own any other type of real estate (e.g., vacation, rental, etc.)? (Yes, No)`,
+    answer: ''
+  },
+  Q10_2: {
+    question_details: `What is the approximate value of your real estate?`,
+    answer: ''
+  },
+  Q12: {
+    question_details: `Do you want to buy real estate in the future? (Yes, No)`,
+    answer: ''
+  },
+  Q13: {
+    question_details: `Do you have any financial goals already created? (Yes, No)`,
+    answer: ''
+  },
+  Q10_3: {
+    question_details: `What is the approximate value of your primary residence or other real estate?`,
+    answer: ''
+  }
 })
 
 const step = ref(1)
 function nextStep() {
-  if (step.value === 1 && personalInformation.value.Q3 === 'Married') {
-    step.value = 2
-  } else if (step.value === 1 && personalInformation.value.Q4 === 'Yes') {
-    step.value = 3
-  } else if (step.value === 1) {
-    step.value = 4
-  } else if (step.value === 2 && personalInformation.value.Q4 === 'Yes') {
-    step.value = 3
-  } else if (step.value === 2) {
-    step.value = 4
-  } else if (step.value === 3) {
-    step.value = 4
-  } else if (
-    step.value === 5 &&
-    personalInformation.value.Q8 !== 'Yes' &&
-    personalInformation.value.Q11 !== 'Yes'
-  ) {
-    // If user does not own either a primary house or other real estate, skip real estate value question
-    step.value = 7
+  if (validateStep(step.value)) {
+    if (step.value === 1 && form.value.Q3.answer.toLocaleLowerCase() === 'Married') {
+      step.value = 2
+    } else if (step.value === 1 && form.value.Q4.answer === 'Yes') {
+      step.value = 3
+    } else if (step.value === 1) {
+      step.value = 4
+    } else if (step.value === 2 && form.value.Q4.answer === 'Yes') {
+      step.value = 3
+    } else if (step.value === 2) {
+      step.value = 4
+    } else if (step.value === 3) {
+      step.value = 4
+    } else if (
+      step.value === 5 &&
+      form.value.Q8.answer !== 'Yes' &&
+      form.value.Q11.answer !== 'Yes'
+    ) {
+      // If user does not own either a primary house or other real estate, skip real estate value question
+      step.value = 7
+    } else {
+      step.value++
+    }
   } else {
-    step.value++
+    alert('Fields have not been filled out')
   }
 }
 
 function previousStep() {
   if (step.value === 2) {
     step.value = 1
-  } else if (step.value === 3 && personalInformation.value.Q3 === 'Married') {
+  } else if (step.value === 3 && form.value.Q3.answer.toLowerCase() === 'married') {
     step.value = 2
   } else if (step.value === 3) {
     step.value = 1
-  } else if (step.value === 4 && personalInformation.value.Q4 === 'Yes') {
+  } else if (step.value === 4 && form.value.Q4.answer === 'Yes') {
     step.value = 3
-  } else if (step.value === 4 && personalInformation.value.Q3 === 'Married') {
+  } else if (step.value === 4 && form.value.Q3.answer.toLowerCase() === 'married') {
     step.value = 2
   } else if (step.value === 4) {
     step.value = 1
   } else if (
     step.value === 7 &&
-    personalInformation.value.Q8 !== 'Yes' &&
-    personalInformation.value.Q11 !== 'Yes'
+    form.value.Q8.answer !== 'Yes' &&
+    form.value.Q11.answer !== 'Yes'
   ) {
     step.value = 5
   } else {
     step.value--
   }
+}
+
+function validateStep(step: number) {
+  console.log(form.value)
+  if (step === 1) {
+    if (
+      !form.value.Q1.answer ||
+      !form.value.Q2.answer ||
+      !form.value.Q3.answer ||
+      !form.value.Q4.answer
+    ) {
+      return false
+    }
+  } else if (step === 2) {
+    if (!form.value.Q5.answer || !form.value.Q6.answer) {
+      return false
+    }
+  } else if (step === 3 && !form.value.Q7) {
+    return false
+  }
+  return true
 }
 </script>
 
@@ -75,67 +146,49 @@ function previousStep() {
   <div class="form-page">
     <div v-if="step === 1">
       <h1>Personal Information</h1>
-      <InputText v-model="personalInformation.Q1" label="What is your full legal name?" />
-      <InputText v-model="personalInformation.Q2" label="What is your birth year?" />
-      <InputText
-        v-model="personalInformation.Q3"
-        label="What is your marital status? (Single, Married, Divorced, Widowed, Domestic Partner)"
-      />
-      <InputYesNo v-model="personalInformation.Q4" label="Do you have any children?" />
+      <InputText v-model="form.Q1.answer" :label="form.Q1.question_details" />
+      <InputText v-model="form.Q2.answer" :label="form.Q2.question_details" />
+      <InputText v-model="form.Q3.answer" :label="form.Q3.question_details" />
+      <InputYesNo v-model="form.Q4.answer" :label="form.Q4.question_details" />
       <button @click="nextStep">Next</button>
     </div>
     <div v-if="step === 2">
       <h1>Partner Information</h1>
-      <InputText v-model="personalInformation.Q5" label="What is your partner's full legal name?" />
-      <InputText v-model="personalInformation.Q6" label="What is your partner's birth year?" />
+      <InputText v-model="form.Q5.answer" :label="form.Q5.question_details" />
+      <InputText v-model="form.Q6.answer" :label="form.Q6.question_details" />
       <button @click="previousStep">Previous</button>
       <button @click="nextStep">Next</button>
     </div>
     <div v-if="step === 3">
       <h1>Children Information</h1>
-      <InputText v-model="personalInformation.Q7" label="How many children do you have?" />
+      <InputText v-model="form.Q7.answer" :label="form.Q7.question_details" />
       <button @click="previousStep">Previous</button>
       <button @click="nextStep">Next</button>
     </div>
     <div v-if="step === 4">
       <h1>Primary Residence Information</h1>
-      <InputYesNo
-        v-model="personalInformation.Q8"
-        label="Do you or your partner (if not single) own your primary residence?"
-      />
-      <div v-if="personalInformation.Q8 === 'Yes'">
-        <InputYesNo
-          v-model="personalInformation.Q9"
-          label="Is your primary residence also your preferred mailing address?"
-        />
-        <InputText
-          v-model="personalInformation.Q10"
-          label="What is the approximate value of your real estate?"
-        />
+      <InputYesNo v-model="form.Q8.answer" :label="form.Q8.question_details" />
+      <div v-if="form.Q8.answer === 'Yes'">
+        <InputYesNo v-model="form.Q9.answer" :label="form.Q9.question_details" />
+        <InputText v-model="form.Q10.answer" :label="form.Q10.question_details" />
       </div>
       <button @click="previousStep">Previous</button>
       <button @click="nextStep">Next</button>
     </div>
     <div v-if="step === 5">
       <h1>Other Real Estate Information</h1>
-      <InputYesNo
-        v-model="personalInformation.Q11"
-        label="Do you own any other type of real estate (e.g., vacation, rental, etc.)?"
-      />
+      <InputYesNo v-model="form.Q11.answer" :label="form.Q11.question_details" />
       <InputText
-        v-if="personalInformation.Q11 === 'Yes'"
-        v-model="personalInformation.Q10_2"
-        label="What is the approximate value of your real estate?"
+        v-if="form.Q11.answer === 'Yes'"
+        v-model="form.Q10_2.answer"
+        :label="form.Q10_2.question_details"
       />
-      <div v-else-if="personalInformation.Q11 === 'No'">
+      <div v-else-if="form.Q11.answer === 'No'">
+        <InputYesNo v-model="form.Q12.answer" :label="form.Q12.question_details" />
         <InputYesNo
-          v-model="personalInformation.Q12"
-          label="Do you want to buy real estate in the future?"
-        />
-        <InputYesNo
-          v-if="personalInformation.Q12 === 'Yes'"
-          v-model="personalInformation.Q13"
-          label="Do you have any financial goals already created?"
+          v-if="form.Q12.answer === 'Yes'"
+          v-model="form.Q13.answer"
+          :label="form.Q13.question_details"
         />
       </div>
       <button @click="previousStep">Previous</button>
@@ -143,16 +196,12 @@ function previousStep() {
     </div>
     <div v-if="step === 6">
       <h1>Real Estate Value</h1>
-      <InputText
-        v-model="personalInformation.Q10_3"
-        label="What is the approximate value of your primary residence or other real estate?"
-      />
+      <InputText v-model="form.Q10_3.answer" :label="form.Q10_3.question_details" />
       <button @click="previousStep">Previous</button>
       <button @click="nextStep">Next</button>
     </div>
     <div v-if="step === 7">
-      <h1>Preview of Answers</h1>
-      <p>{{ personalInformation }}</p>
+      <AnswerPreview :answers="form" />
       <button @click="previousStep">Previous</button>
     </div>
   </div>

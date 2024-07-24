@@ -2,6 +2,7 @@
 import InputText from '@/components/FormElements/InputText.vue'
 import InputYesNo from '@/components/FormElements/InputYesNo.vue'
 import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
+import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
 import { ref } from 'vue'
 const form = ref({
   Q1: {
@@ -150,14 +151,13 @@ function validateStep(step: number) {
       <InputText v-model="form.Q2.answer" :label="form.Q2.question_details" />
       <InputText v-model="form.Q3.answer" :label="form.Q3.question_details" />
       <InputYesNo v-model="form.Q4.answer" :label="form.Q4.question_details" />
-      <button @click="nextStep">Next</button>
+      <PrevNextButtons :next="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
     <div v-if="step === 2">
       <h1>Partner Information</h1>
       <InputText v-model="form.Q5.answer" :label="form.Q5.question_details" />
       <InputText v-model="form.Q6.answer" :label="form.Q6.question_details" />
-      <button @click="previousStep">Previous</button>
-      <button @click="nextStep">Next</button>
+      <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
     <div v-if="step === 3">
       <h1>Children Information</h1>
@@ -172,8 +172,7 @@ function validateStep(step: number) {
         <InputYesNo v-model="form.Q9.answer" :label="form.Q9.question_details" />
         <InputText v-model="form.Q10.answer" :label="form.Q10.question_details" />
       </div>
-      <button @click="previousStep">Previous</button>
-      <button @click="nextStep">Next</button>
+      <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
     <div v-if="step === 5">
       <h1>Other Real Estate Information</h1>
@@ -191,18 +190,16 @@ function validateStep(step: number) {
           :label="form.Q13.question_details"
         />
       </div>
-      <button @click="previousStep">Previous</button>
-      <button @click="nextStep">Next</button>
+      <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
     <div v-if="step === 6">
       <h1>Real Estate Value</h1>
       <InputText v-model="form.Q10_3.answer" :label="form.Q10_3.question_details" />
-      <button @click="previousStep">Previous</button>
-      <button @click="nextStep">Next</button>
+      <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
     <div v-if="step === 7">
       <AnswerPreview :answers="form" />
-      <button @click="previousStep">Previous</button>
+      <PrevNextButtons :prev="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
   </div>
 </template>

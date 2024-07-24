@@ -70,7 +70,7 @@ const form = ref({
 const step = ref(1)
 function nextStep() {
   if (validateStep(step.value)) {
-    if (step.value === 1 && form.value.Q3.answer.toLocaleLowerCase() === 'Married') {
+    if (step.value === 1 && form.value.Q3.answer.toLowerCase() === 'married') {
       step.value = 2
     } else if (step.value === 1 && form.value.Q4.answer === 'Yes') {
       step.value = 3
@@ -121,8 +121,8 @@ function previousStep() {
   }
 }
 
+// Validate that each required field has been filled out
 function validateStep(step: number) {
-  console.log(form.value)
   if (step === 1) {
     if (
       !form.value.Q1.answer ||
@@ -162,8 +162,7 @@ function validateStep(step: number) {
     <div v-if="step === 3">
       <h1>Children Information</h1>
       <InputText v-model="form.Q7.answer" :label="form.Q7.question_details" />
-      <button @click="previousStep">Previous</button>
-      <button @click="nextStep">Next</button>
+      <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
     </div>
     <div v-if="step === 4">
       <h1>Primary Residence Information</h1>
@@ -205,6 +204,13 @@ function validateStep(step: number) {
 </template>
 
 <style>
+.form-page > div {
+  background-color: #fafafb;
+  border: 1px solid #ced4da;
+  padding: 2rem;
+  border-radius: 0.25rem;
+}
+
 @media (min-width: 1024px) {
   .form-page {
     min-height: 100vh;

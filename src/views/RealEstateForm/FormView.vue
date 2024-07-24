@@ -4,6 +4,7 @@ import InputYesNo from '@/components/FormElements/InputYesNo.vue'
 import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
 import { ref } from 'vue'
+
 const form = ref({
   Q1: {
     question_details: `What is your full legal name?`,
@@ -66,9 +67,13 @@ const form = ref({
     answer: ''
   }
 })
-
+// Step is used to determine what page should be displayed to the user
 const step = ref(1)
+
+// Logic to decide what page to go to when clicking next
+// ToDo: Try using an array of available steps depending on the dependencies?
 function nextStep() {
+  // Validate that the required fields are filled to move on
   if (validateStep(step.value)) {
     if (step.value === 1 && form.value.Q3.answer.toLowerCase() === 'married') {
       step.value = 2
@@ -93,10 +98,12 @@ function nextStep() {
       step.value++
     }
   } else {
-    alert('Fields have not been filled out')
+    alert('All fields have not been filled out!')
   }
 }
 
+// Logic to decide what page to go to when clicking previous
+// ToDo: Try using an array of available steps depending on the dependencies?
 function previousStep() {
   if (step.value === 2) {
     step.value = 1
@@ -136,7 +143,26 @@ function validateStep(step: number) {
     if (!form.value.Q5.answer || !form.value.Q6.answer) {
       return false
     }
-  } else if (step === 3 && !form.value.Q7) {
+  } else if (step === 3 && !form.value.Q7.answer) {
+    return false
+  } else if (step === 4) {
+    if (!form.value.Q8.answer) {
+      return false
+    } else if (
+      form.value.Q8.answer === 'Yes' &&
+      (!form.value.Q9.answer || !form.value.Q10.answer)
+    ) {
+      return false
+    }
+  } else if (step === 5) {
+    if (!form.value.Q11.answer) {
+      return false
+    } else if (form.value.Q11.answer === 'Yes' && !form.value.Q10_2.answer) {
+      return false
+    } else if (!form.value.Q12.answer || !form.value.Q13.answer) {
+      return false
+    }
+  } else if (step === 6 && !form.value.Q10_3.answer) {
     return false
   }
   return true

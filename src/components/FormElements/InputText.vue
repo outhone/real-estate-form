@@ -43,8 +43,4 @@ const modelValue = defineModel()
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
 }
-
-.error-msg {
-  color: red;
-}
 </style>

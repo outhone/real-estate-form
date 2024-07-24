@@ -3,71 +3,14 @@ import InputText from '@/components/FormElements/InputText.vue'
 import InputYesNo from '@/components/FormElements/InputYesNo.vue'
 import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
-import { ref } from 'vue'
+import { DefaultFormAnswers } from '@/views/RealEstateForm/DefaultFormAnswers.js'
+import { ref, watch } from 'vue'
 
-// ToDo: Storm form data in session storage instead?
-const form = ref({
-  Q1: {
-    question_details: `What is your full legal name?`,
-    answer: ''
-  },
-  Q2: {
-    question_details: `What is your birth year?`,
-    answer: ''
-  },
-  Q3: {
-    question_details: `What is your marital status? (Single, Married, Divorced, Widowed, Domestic Partner)`,
-    answer: ''
-  },
-  Q4: {
-    question_details: `Do you have any children? (Yes, No)`,
-    answer: ''
-  },
-  Q5: {
-    question_details: `What is your partner's full legal name?`,
-    answer: ''
-  },
-  Q6: {
-    question_details: `What is your partner's birth year?`,
-    answer: ''
-  },
-  Q7: {
-    question_details: `How many children do you have?`,
-    answer: ''
-  },
-  Q8: {
-    question_details: `Do you or your partner (if not single) own your primary residence? (Yes, No)`,
-    answer: ''
-  },
-  Q9: {
-    question_details: `Is your primary residence also your preferred mailing address? (Yes, No)`,
-    answer: ''
-  },
-  Q10: {
-    question_details: `What is the approximate value of your real estate?`,
-    answer: ''
-  },
-  Q11: {
-    question_details: `Do you own any other type of real estate (e.g., vacation, rental, etc.)? (Yes, No)`,
-    answer: ''
-  },
-  Q10_2: {
-    question_details: `What is the approximate value of your real estate?`,
-    answer: ''
-  },
-  Q12: {
-    question_details: `Do you want to buy real estate in the future? (Yes, No)`,
-    answer: ''
-  },
-  Q13: {
-    question_details: `Do you have any financial goals already created? (Yes, No)`,
-    answer: ''
-  },
-  Q10_3: {
-    question_details: `What is the approximate value of your primary residence or other real estate?`,
-    answer: ''
-  }
-})
+// ToDo: Store form data in session storage instead?
+// ToDo: Group questions into their relative steps so that you can use v-for
+// ToDo: Create Number and Dropdown input components for better user validation
+const form = ref(DefaultFormAnswers)
+const formError = ref(false)
 
 // Step is used to determine what page should be displayed to the user
 const step = ref(1)
@@ -77,13 +20,13 @@ const step = ref(1)
 function nextStep() {
   // Validate that the required fields are filled to move on
   if (validateStep(step.value)) {
-    if (step.value === 1 && form.value.Q3.answer.toLowerCase() === 'married') {
+    if (step.value === 1 && hasPartner()) {
       step.value = 2
-    } else if (step.value === 1 && form.value.Q4.answer === 'Yes') {
+    } else if (step.value === 1 && hasChildren()) {
       step.value = 3
     } else if (step.value === 1) {
       step.value = 4
-    } else if (step.value === 2 && form.value.Q4.answer === 'Yes') {
+    } else if (step.value === 2 && hasChildren()) {
       step.value = 3
     } else if (step.value === 2) {
       step.value = 4
@@ -100,8 +43,8 @@ function nextStep() {
       step.value++
     }
   } else {
-    // ToDo: Change to display error messages instead of alert
-    alert('All fields have not been filled out!')
+    formError.value = true
+    //alert('All fields have not been filled out!')
   }
 }
 
@@ -110,13 +53,13 @@ function nextStep() {
 function previousStep() {
   if (step.value === 2) {
     step.value = 1
-  } else if (step.value === 3 && form.value.Q3.answer.toLowerCase() === 'married') {
+  } else if (step.value === 3 && hasPartner()) {
     step.value = 2
   } else if (step.value === 3) {
     step.value = 1
-  } else if (step.value === 4 && form.value.Q4.answer === 'Yes') {
+  } else if (step.value === 4 && hasChildren()) {
     step.value = 3
-  } else if (step.value === 4 && form.value.Q3.answer.toLowerCase() === 'married') {
+  } else if (step.value === 4 && hasPartner()) {
     step.value = 2
   } else if (step.value === 4) {
     step.value = 1
@@ -172,6 +115,40 @@ function validateStep(step: number) {
   }
   return true
 }
+
+// Based on form input, return if user as a partner
+function hasPartner() {
+  const answer = form.value.Q3.answer.toLowerCase()
+  if (answer === 'married' || answer === 'domestic partner') {
+    return true
+  } else {
+    return false
+  }
+}
+
+// Based on form input, return if user as a children
+function hasChildren() {
+  if (form.value.Q4.answer === 'Yes') {
+    return true
+  } else {
+    return false
+  }
+}
+
+// Clear step page error message when step and form fields changes
+watch([step, form.value], () => {
+  formError.value = false
+})
+
+// Clear fields when question 4 changes
+watch(
+  () => form.value.Q4.answer,
+  () => {
+    form.value.Q7.answer = ''
+  }
+)
+// ToDo: Add general watchers to clear fields based on option and dependencies
+// Use a loop to go through default values
 </script>
 
 <template>
@@ -233,6 +210,7 @@ function validateStep(step: number) {
         <AnswerPreview :answers="form" />
         <PrevNextButtons :prev="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
+      <p v-if="formError" class="error-msg">Error: All fields must be answered.</p>
     </div>
   </div>
 </template>

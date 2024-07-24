@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import LoginForm from '@/components/UserAuth/LoginForm.vue'
 </script>
 
 <template>
   <main class="text-center">
-    <h1>Home Page / User Login</h1>
-    <RouterLink to="/form">Go to Real Estate Form</RouterLink>
+    <LoginForm />
   </main>
 </template>

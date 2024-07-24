@@ -5,6 +5,7 @@ import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
 import { ref } from 'vue'
 
+// ToDo: Storm form data in session storage instead?
 const form = ref({
   Q1: {
     question_details: `What is your full legal name?`,
@@ -99,6 +100,7 @@ function nextStep() {
       step.value++
     }
   } else {
+    // ToDo: Change to display error messages instead of alert
     alert('All fields have not been filled out!')
   }
 }

@@ -1,4 +1,4 @@
-export const DefaultFormAnswers = {
+const DefaultFormAnswers = {
   Q1: {
     question_details: `What is your full legal name?`,
     answer: ''
@@ -60,3 +60,4 @@ export const DefaultFormAnswers = {
     answer: ''
   }
 }
+export default DefaultFormAnswers

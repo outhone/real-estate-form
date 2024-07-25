@@ -3,7 +3,7 @@ import InputText from '@/components/FormElements/InputText.vue'
 import InputYesNo from '@/components/FormElements/InputYesNo.vue'
 import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
-import { DefaultFormAnswers } from '@/views/RealEstateForm/DefaultFormAnswers.js'
+import DefaultFormAnswers from '@/views/RealEstateForm/DefaultFormAnswers.js'
 import { ref, watch } from 'vue'
 
 // ToDo: Store form data in session storage instead?

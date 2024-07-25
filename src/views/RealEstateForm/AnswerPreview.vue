@@ -12,7 +12,6 @@ defineProps<{
 
 <template>
   <h1>Your Answers</h1>
-  <p>{{ answers }}</p>
   <div v-for="(answer, index) in answers" :key="index">
     <div v-if="answer.answer" class="question-answer-group">
       <p class="bold">{{ answer.question_details }}</p>

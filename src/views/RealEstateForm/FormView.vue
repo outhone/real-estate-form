@@ -6,14 +6,19 @@ import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
 import DefaultFormAnswers from '@/views/RealEstateForm/DefaultFormAnswers.js'
 import { ref, watch } from 'vue'
 
-// ToDo: Store form data in session storage instead?
 // ToDo: Group questions into their relative steps so that you can use v-for for each section instad
 // ToDo: Create Number and Dropdown input components for better user validation and experience
-const form = ref(DefaultFormAnswers)
-const formError = ref(false)
 
-// Step is used to determine what page should be displayed to the user
+// Use session storage to store user data
+const form = ref(DefaultFormAnswers)
 const step = ref(1)
+if (sessionStorage.getItem('realEstateFormData') !== null) {
+  form.value = JSON.parse(sessionStorage.getItem('realEstateFormData') || '{}')
+  step.value = JSON.parse(sessionStorage.getItem('realEstateFormStep') || '{}')
+}
+
+// Used to display error that all form fields have not been filled out
+const formError = ref(false)
 
 // Logic to decide what page to go to when clicking next
 // ToDo: Try using an array of available steps depending on the dependencies instead?
@@ -135,8 +140,11 @@ function hasChildren() {
   }
 }
 
-// Clear step page error message when step and form fields changes
+// Update session store with updated values when step or form field changes
+// Clear step page error message as well
 watch([step, form.value], () => {
+  sessionStorage.setItem('realEstateFormData', JSON.stringify(form.value))
+  sessionStorage.setItem('realEstateFormStep', JSON.stringify(step.value))
   formError.value = false
 })
 

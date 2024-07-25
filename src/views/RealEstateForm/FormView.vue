@@ -7,8 +7,8 @@ import DefaultFormAnswers from '@/views/RealEstateForm/DefaultFormAnswers.js'
 import { ref, watch } from 'vue'
 
 // ToDo: Store form data in session storage instead?
-// ToDo: Group questions into their relative steps so that you can use v-for
-// ToDo: Create Number and Dropdown input components for better user validation
+// ToDo: Group questions into their relative steps so that you can use v-for?
+// ToDo: Create Number and Dropdown input components for better user validation and experience
 const form = ref(DefaultFormAnswers)
 const formError = ref(false)
 
@@ -16,7 +16,7 @@ const formError = ref(false)
 const step = ref(1)
 
 // Logic to decide what page to go to when clicking next
-// ToDo: Try using an array of available steps depending on the dependencies?
+// ToDo: Try using an array of available steps depending on the dependencies instead?
 function nextStep() {
   // Validate that the required fields are filled to move on
   if (validateStep(step.value)) {
@@ -43,13 +43,13 @@ function nextStep() {
       step.value++
     }
   } else {
+    // Display error that all form fields must be filled
     formError.value = true
-    //alert('All fields have not been filled out!')
   }
 }
 
 // Logic to decide what page to go to when clicking previous
-// ToDo: Try using an array of available steps depending on the dependencies?
+// ToDo: Try using an array of available steps depending on the dependencies instead?
 function previousStep() {
   if (step.value === 2) {
     step.value = 1
@@ -126,7 +126,7 @@ function hasPartner() {
   }
 }
 
-// Based on form input, return if user as a children
+// Based on form input, return if user as children
 function hasChildren() {
   if (form.value.Q4.answer === 'Yes') {
     return true
@@ -148,14 +148,14 @@ watch(
   }
 )
 // ToDo: Add general watchers to clear fields based on option and dependencies
-// Use a loop to go through default values
+// Use a loop to go through dependencies?
 </script>
 
 <template>
   <div class="form-page">
     <div>
       <progress class="progress-bar" :max="6" :value="step - 1"></progress>
-      <div v-if="step === 1">
+      <div v-show="step === 1">
         <h1>Personal Information</h1>
         <InputText v-model="form.Q1.answer" :label="form.Q1.question_details" />
         <InputText v-model="form.Q2.answer" :label="form.Q2.question_details" />
@@ -163,18 +163,18 @@ watch(
         <InputYesNo v-model="form.Q4.answer" :label="form.Q4.question_details" />
         <PrevNextButtons :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-if="step === 2">
+      <div v-show="step === 2">
         <h1>Partner Information</h1>
         <InputText v-model="form.Q5.answer" :label="form.Q5.question_details" />
         <InputText v-model="form.Q6.answer" :label="form.Q6.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-if="step === 3">
+      <div v-show="step === 3">
         <h1>Children Information</h1>
         <InputText v-model="form.Q7.answer" :label="form.Q7.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-if="step === 4">
+      <div v-show="step === 4">
         <h1>Primary Residence Information</h1>
         <InputYesNo v-model="form.Q8.answer" :label="form.Q8.question_details" />
         <div v-if="form.Q8.answer === 'Yes'">
@@ -183,7 +183,7 @@ watch(
         </div>
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-if="step === 5">
+      <div v-show="step === 5">
         <h1>Other Real Estate Information</h1>
         <InputYesNo v-model="form.Q11.answer" :label="form.Q11.question_details" />
         <InputText
@@ -201,12 +201,12 @@ watch(
         </div>
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-if="step === 6">
+      <div v-show="step === 6">
         <h1>Real Estate Value</h1>
         <InputText v-model="form.Q10_3.answer" :label="form.Q10_3.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-if="step === 7">
+      <div v-show="step === 7">
         <AnswerPreview :answers="form" />
         <PrevNextButtons :prev="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>

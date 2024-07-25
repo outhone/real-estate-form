@@ -4,6 +4,8 @@ import { RouterLink } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
+// Basic just a button to go to the form page at the moment
+// Todo: Add user auth
 </script>
 
 <template>

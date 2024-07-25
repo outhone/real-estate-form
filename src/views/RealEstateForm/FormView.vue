@@ -7,7 +7,7 @@ import DefaultFormAnswers from '@/views/RealEstateForm/DefaultFormAnswers.js'
 import { ref, watch } from 'vue'
 
 // ToDo: Store form data in session storage instead?
-// ToDo: Group questions into their relative steps so that you can use v-for?
+// ToDo: Group questions into their relative steps so that you can use v-for for each section instad
 // ToDo: Create Number and Dropdown input components for better user validation and experience
 const form = ref(DefaultFormAnswers)
 const formError = ref(false)

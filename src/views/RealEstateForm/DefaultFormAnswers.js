@@ -1,3 +1,5 @@
+// This object is the default answers for the form
+
 const DefaultFormAnswers = {
   Q1: {
     question_details: `What is your full legal name?`,

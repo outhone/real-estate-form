@@ -28,6 +28,15 @@ const maritalStatus = ['Single', 'Married', 'Divorced', 'Widowed', 'Domestic Par
 //   step.value = JSON.parse(sessionStorage.getItem('realEstateFormStep') || '{}')
 // }
 
+// Events to do when step or form answer changes
+watch([step, form.value], () => {
+  // Clear form error message
+  formError.value = false
+  // If session storage is enabled to store user form answers uncomment
+  // sessionStorage.setItem('realEstateFormData', JSON.stringify(form.value))
+  // sessionStorage.setItem('realEstateFormStep', JSON.stringify(step.value))
+})
+
 // ToDo: Use group of questions method idea instead of pages? => ex qg1=[Q1,Q2,Q3,Q4], qg2=[] single was selected, qg3=[Q7]
 // Or use an array of steps/pages that a user can get to based on dependences ex [1,4,6]. When a page/step is removed from array clear all form fields on that pages
 // Logic to decide what page to go to when clicking next
@@ -137,15 +146,6 @@ function hasChildren() {
     return false
   }
 }
-
-// Events to do when step or form answer changes
-watch([step, form.value], () => {
-  // Clear form error message
-  formError.value = false
-  // If session storage is enabled to store user form answers uncomment
-  // sessionStorage.setItem('realEstateFormData', JSON.stringify(form.value))
-  // sessionStorage.setItem('realEstateFormStep', JSON.stringify(step.value))
-})
 
 // Loop through all questions that have dependencies and create watchers for them to clear their respecitive fields when updated
 // Improvement: Make this smarter by using QuestionsAnswers values and look for questions with dependencies instead of hardcoded list

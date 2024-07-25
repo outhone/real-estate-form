@@ -38,6 +38,43 @@ watch([step, form.value], () => {
   // sessionStorage.setItem('realEstateFormStep', JSON.stringify(step.value))
 })
 
+// Loop through all questions that have dependencies and create watchers for them to clear their respecitive fields when updated
+for (let questionId in QuestionsAnswers) {
+  const questionData = QuestionsAnswers[questionId as QuestionIdType]
+  if (questionData.question_dependencies.yes || questionData.question_dependencies.no) {
+    createWatchers(questionId as QuestionIdType)
+  }
+}
+
+function createWatchers(id: QuestionIdType) {
+  watch(
+    () => form.value[id].answer,
+    () => {
+      // Improvement: Allow an array of dependencies to clear multiple questions
+      const yesDependence = form.value[id].question_dependencies.yes as QuestionIdType
+      const noDependence = form.value[id].question_dependencies.no as QuestionIdType
+      if (noDependence) {
+        // Clear the question dependency
+        form.value[noDependence].answer = ''
+      }
+      if (yesDependence) {
+        // Clear the question dependency
+        form.value[yesDependence].answer = ''
+      }
+    }
+  )
+}
+
+// Answer to question question 3 about marriage clears 2 questions' answer
+// This would not be needed if watcher above allows for multiple dependencies to be cleared at once and the json is updated with two dependencies
+watch(
+  () => form.value.Q3.answer,
+  () => {
+    form.value.Q5.answer = ''
+    form.value.Q6.answer = ''
+  }
+)
+
 // ToDo: Use group of questions method idea instead of pages? => ex qg1=[Q1,Q2,Q3,Q4], qg2=[] single was selected, qg3=[Q7]
 // Or use an array of steps/pages that a user can get to based on dependences ex [1,4,6]. When a page/step is removed from array clear all form fields on that pages
 // Logic to decide what page to go to when clicking next
@@ -147,44 +184,6 @@ function hasChildren() {
     return false
   }
 }
-
-// Loop through all questions that have dependencies and create watchers for them to clear their respecitive fields when updated
-// Improvement: Make this smarter by using QuestionsAnswers values and look for questions with dependencies instead of hardcoded list
-for (let id of ['Q4', 'Q8', 'Q11', 'Q12']) {
-  createWatchers(id as QuestionIdType)
-}
-function createWatchers(id: QuestionIdType) {
-  watch(
-    () => form.value[id].answer,
-    () => {
-      // Improvement: Allow an array of dependencies to clear multiple questions
-      const yesDependence = form.value[id].question_dependencies.yes as QuestionIdType
-      const noDependence = form.value[id].question_dependencies.no as QuestionIdType
-      if (noDependence) {
-        // Create a watcher for their dependences to deal with nested conditional questions
-        createWatchers(noDependence)
-        // Clear the question dependency
-        form.value[noDependence].answer = ''
-      }
-      if (yesDependence) {
-        // Create a watcher for their dependences to deal with nested conditional questions
-        createWatchers(yesDependence)
-        // Clear the question dependency
-        form.value[yesDependence].answer = ''
-      }
-    }
-  )
-}
-
-// Answer to question question 3 about marriage clears 2 questions' answer
-// This would not be needed if watcher above allows for multiple dependencies to be cleared at once
-watch(
-  () => form.value.Q3.answer,
-  () => {
-    form.value.Q5.answer = ''
-    form.value.Q6.answer = ''
-  }
-)
 </script>
 
 <template>

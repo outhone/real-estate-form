@@ -162,7 +162,7 @@ watch(
 <template>
   <div class="form-page">
     <div>
-      <progress class="progress-bar" :max="6" :value="step - 1"></progress>
+      <progress id="progress-bar" class="progress-bar" :max="6" :value="step - 1"></progress>
       <div v-show="step === 1">
         <h1>Personal Information</h1>
         <InputText v-model="form.Q1.answer" :id="form.Q1.id" :label="form.Q1.question_details" />
@@ -232,7 +232,9 @@ watch(
         <AnswerPreview :answers="form" />
         <PrevNextButtons :prev="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <p v-if="formError" class="error-msg">Error: All fields must be answered.</p>
+      <p v-if="formError" id="form-error-msg" class="error-msg">
+        Error: All fields must be answered.
+      </p>
     </div>
   </div>
 </template>

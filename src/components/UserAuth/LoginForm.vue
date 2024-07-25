@@ -14,7 +14,7 @@ const password = ref('')
     <input class="login-input" type="email" v-model="email" placeholder="Email" />
     <input class="login-input" type="password" v-model="password" placeholder="Password" />
     <RouterLink to="/form" v-slot="{ navigate }">
-      <button class="btn" @click="navigate" role="link">Login</button>
+      <button id="login-btn" class="btn" @click="navigate" role="link">Login</button>
     </RouterLink>
   </div>
 </template>

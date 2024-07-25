@@ -1,4 +1,5 @@
 // This object is the default answers for the form
+// ToDo: Make this into an array of objects. Initial idea for it to be object is not needed anymore.
 const QuestionsAnswers = {
   Q1: {
     id: 'Q1',

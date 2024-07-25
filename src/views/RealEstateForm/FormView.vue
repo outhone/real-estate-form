@@ -3,25 +3,30 @@ import InputText from '@/components/FormElements/InputText.vue'
 import InputYesNo from '@/components/FormElements/InputYesNo.vue'
 import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
-import DefaultFormAnswers from '@/views/RealEstateForm/DefaultFormAnswers.js'
+import QuestionsAnswers from '@/views/RealEstateForm/QuestionsAnswers'
 import { ref, watch } from 'vue'
 
-// ToDo: Group questions into their relative steps so that you can use v-for for each section instad
+// ToDo: Group questions into their relative steps so that you can use v-for for each section instead?
 // ToDo: Create Number and Dropdown input components for better user validation and experience
 
-// Use session storage to store user data
-const form = ref(DefaultFormAnswers)
+// Answers and question information for the form
+const form = ref(QuestionsAnswers)
+
+// Step is used to track what page is being dislayed
 const step = ref(1)
+
+// Used to display error that all form fields have not been filled out
+const formError = ref(false)
+
+// Use session storage to store user data . Can be removed.
 if (sessionStorage.getItem('realEstateFormData') !== null) {
   form.value = JSON.parse(sessionStorage.getItem('realEstateFormData') || '{}')
   step.value = JSON.parse(sessionStorage.getItem('realEstateFormStep') || '{}')
 }
 
-// Used to display error that all form fields have not been filled out
-const formError = ref(false)
-
+// ToDo: Use group of questions method idea instead of pages? => ex qg1=[Q1,Q2,Q3,Q4], qg2=[] single was selected, qg3=[Q7]
+// Or use an array of steps/pages that a user can get to based on dependences ex [1,4,6]. When a page/step is removed from array clear all form fields on that pages
 // Logic to decide what page to go to when clicking next
-// ToDo: Try using an array of available steps depending on the dependencies instead?
 function nextStep() {
   // Validate that the required fields are filled to move on
   if (validateStep(step.value)) {
@@ -37,13 +42,6 @@ function nextStep() {
       step.value = 4
     } else if (step.value === 3) {
       step.value = 4
-    } else if (
-      step.value === 5 &&
-      form.value.Q8.answer !== 'Yes' &&
-      form.value.Q11.answer !== 'Yes'
-    ) {
-      // If user does not own either a primary house or other real estate, skip real estate value question
-      step.value = 7
     } else {
       step.value++
     }
@@ -54,7 +52,7 @@ function nextStep() {
 }
 
 // Logic to decide what page to go to when clicking previous
-// ToDo: Try using an array of available steps depending on the dependencies instead?
+// ToDo: Try using an array of available steps depending on the dependencies instead? See comment on nextStep function
 function previousStep() {
   if (step.value === 2) {
     step.value = 1
@@ -68,18 +66,14 @@ function previousStep() {
     step.value = 2
   } else if (step.value === 4) {
     step.value = 1
-  } else if (
-    step.value === 7 &&
-    form.value.Q8.answer !== 'Yes' &&
-    form.value.Q11.answer !== 'Yes'
-  ) {
-    step.value = 5
   } else {
     step.value--
   }
 }
 
 // Validate that each required field has been filled out
+// ToDo: Use group of questions method idea instead of pages? => ex qg1=[Q1,Q2,Q3,Q4], qg2=[] single was selected, qg3=[Q7] has children selected
+// Then just verify each questionis filled based on the group of questions in the array
 function validateStep(step: number) {
   if (step === 1) {
     if (
@@ -110,7 +104,7 @@ function validateStep(step: number) {
       return false
     } else if (form.value.Q11.answer === 'Yes' && !form.value.Q10_2.answer) {
       return false
-    } else if (!form.value.Q12.answer) {
+    } else if (form.value.Q11.answer === 'No' && !form.value.Q12.answer) {
       return false
     } else if (form.value.Q12.answer === 'Yes' && !form.value.Q13.answer) {
       return false
@@ -140,7 +134,7 @@ function hasChildren() {
   }
 }
 
-// Update session store with updated values when step or form field changes
+// Update session store with updated values when step or form field changes. Session storage can be removed if not wanted.
 // Clear step page error message as well
 watch([step, form.value], () => {
   sessionStorage.setItem('realEstateFormData', JSON.stringify(form.value))
@@ -148,22 +142,50 @@ watch([step, form.value], () => {
   formError.value = false
 })
 
-// Clear fields when question 4 changes
+// Loop through all questions that have dependencies and create watchers for them to clear their respecitive fields when updated
+// Improvement: Make this smarter by using QuestionsAnswers values and look for questions with dependencies instead of hardcoded list
+for (let id of ['Q4', 'Q8', 'Q11', 'Q12']) {
+  createWatchers(id)
+}
+function createWatchers(id: string) {
+  watch(
+    () => form.value[id].answer,
+    () => {
+      // Improvement: Allow an array of dependencies to clear multiple questions
+      const yesDependence = form.value[id].question_dependencies.yes
+      const noDependence = form.value[id].question_dependencies.no
+      if (noDependence) {
+        // Create a watcher for their dependences to deal with nested conditional questions
+        createWatchers(noDependence)
+        // Clear the question dependency
+        form.value[noDependence].answer = ''
+      }
+      if (yesDependence) {
+        // Create a watcher for their dependences to deal with nested conditional questions
+        createWatchers(yesDependence)
+        // Clear the question dependency
+        form.value[yesDependence].answer = ''
+      }
+    }
+  )
+}
+
+// Answer to question question 3 about marriage clears 2 questions' answer
+// This would not be needed if watcher above allows for multiple dependencies to be cleared at once
 watch(
-  () => form.value.Q4.answer,
+  () => form.value.Q3.answer,
   () => {
-    form.value.Q7.answer = ''
+    form.value.Q5.answer = ''
+    form.value.Q6.answer = ''
   }
 )
-// ToDo: Add general watchers to clear fields based on option and dependencies
-// Use a loop to go through dependencies?
 </script>
 
 <template>
   <div class="form-page">
     <div>
       <progress id="progress-bar" class="progress-bar" :max="6" :value="step - 1"></progress>
-      <div v-show="step === 1">
+      <div v-if="step === 1">
         <h1>Personal Information</h1>
         <InputText v-model="form.Q1.answer" :id="form.Q1.id" :label="form.Q1.question_details" />
         <InputText v-model="form.Q2.answer" :id="form.Q2.id" :label="form.Q2.question_details" />
@@ -171,18 +193,18 @@ watch(
         <InputYesNo v-model="form.Q4.answer" :id="form.Q4.id" :label="form.Q4.question_details" />
         <PrevNextButtons :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-show="step === 2">
+      <div v-if="step === 2">
         <h1>Partner Information</h1>
         <InputText v-model="form.Q5.answer" :id="form.Q5.id" :label="form.Q5.question_details" />
         <InputText v-model="form.Q6.answer" :id="form.Q6.id" :label="form.Q6.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-show="step === 3">
+      <div v-if="step === 3">
         <h1>Children Information</h1>
         <InputText v-model="form.Q7.answer" :id="form.Q7.id" :label="form.Q7.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-show="step === 4">
+      <div v-if="step === 4">
         <h1>Primary Residence Information</h1>
         <InputYesNo v-model="form.Q8.answer" :id="form.Q8.id" :label="form.Q8.question_details" />
         <div v-if="form.Q8.answer === 'Yes'">
@@ -195,7 +217,7 @@ watch(
         </div>
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-show="step === 5">
+      <div v-if="step === 5">
         <h1>Other Real Estate Information</h1>
         <InputYesNo
           v-model="form.Q11.answer"
@@ -219,7 +241,7 @@ watch(
         </div>
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-show="step === 6">
+      <div v-if="step === 6">
         <h1>Real Estate Value</h1>
         <InputText
           v-model="form.Q10_3.answer"
@@ -228,7 +250,7 @@ watch(
         />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
-      <div v-show="step === 7">
+      <div v-if="step === 7">
         <AnswerPreview :answers="form" />
         <PrevNextButtons :prev="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>

@@ -6,8 +6,8 @@ defineProps<{
 }>()
 const modelValue = defineModel()
 
-// ToDo: Add individual form field validators to verify correct field input based on type of validations desired
-// Validators: marital options only, number only, name only (no numbers), year only
+// Improvements: Add individual form field validators to verify correct field input based on type of validations desired
+// Validators: number only, name only (no numbers), year only, etc
 // const error = ref('')
 </script>
 
@@ -25,7 +25,7 @@ const modelValue = defineModel()
   </div>
 </template>
 
-<style>
+<style scoped>
 .input-text-group {
   margin-bottom: 1rem;
 }

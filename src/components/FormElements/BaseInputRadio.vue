@@ -1,4 +1,9 @@
 <script setup lang="ts">
+// Base component to display a list of radio inputs
+// label: Requried, a string that will be used as the label of the input group
+// options: Required, an array of options that will be displayed
+// id: Optional, used on the element that encompasses the radio input groups
+
 defineProps<{
   label: string
   options: string[]
@@ -26,7 +31,7 @@ const modelValue = defineModel()
   </div>
 </template>
 
-<style>
+<style scoped>
 .input-radio-group {
   margin-bottom: 1rem;
 }

@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router'
 const email = ref('')
 const password = ref('')
 // Basic just a button to go to the form page at the moment
-// Todo: Add user auth
+// Todo: Add user authentication with backend
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const password = ref('')
   </div>
 </template>
 
-<style>
+<style scoped>
 .login-input {
   margin-bottom: 1rem;
   padding: 6px 12px;

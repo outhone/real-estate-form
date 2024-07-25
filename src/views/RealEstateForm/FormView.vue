@@ -278,7 +278,7 @@ function hasChildren() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .form-page > div {
   background-color: #fafafb;
   border: 1px solid #ced4da;

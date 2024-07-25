@@ -12,7 +12,7 @@ defineProps<{
   </div>
 </template>
 
-<style>
+<style scoped>
 .nav-btn-group {
   display: flex;
   justify-content: space-between;

@@ -20,7 +20,7 @@ defineProps<{
   </div>
 </template>
 
-<style>
+<style scoped>
 .question-answer-group {
   margin-bottom: 1rem;
 }

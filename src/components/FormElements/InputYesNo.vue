@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   label: string
+  id?: string
 }>()
 const modelValue = defineModel()
 const yes = 'Yes'
@@ -18,6 +19,7 @@ const no = 'No'
           v-model="modelValue"
           :checked="yes === modelValue"
           :value="yes"
+          :id="id"
           @change="$emit('update:modelValue', yes)"
         />
       </div>
@@ -28,6 +30,7 @@ const no = 'No'
           v-model="modelValue"
           :checked="no === modelValue"
           :value="no"
+          :id="id"
           @change="$emit('update:modelValue', no)"
         />
       </div>

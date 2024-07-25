@@ -165,38 +165,47 @@ watch(
       <progress class="progress-bar" :max="6" :value="step - 1"></progress>
       <div v-show="step === 1">
         <h1>Personal Information</h1>
-        <InputText v-model="form.Q1.answer" :label="form.Q1.question_details" />
-        <InputText v-model="form.Q2.answer" :label="form.Q2.question_details" />
-        <InputText v-model="form.Q3.answer" :label="form.Q3.question_details" />
-        <InputYesNo v-model="form.Q4.answer" :label="form.Q4.question_details" />
+        <InputText v-model="form.Q1.answer" :id="form.Q1.id" :label="form.Q1.question_details" />
+        <InputText v-model="form.Q2.answer" :id="form.Q2.id" :label="form.Q2.question_details" />
+        <InputText v-model="form.Q3.answer" :id="form.Q3.id" :label="form.Q3.question_details" />
+        <InputYesNo v-model="form.Q4.answer" :id="form.Q4.id" :label="form.Q4.question_details" />
         <PrevNextButtons :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
       <div v-show="step === 2">
         <h1>Partner Information</h1>
-        <InputText v-model="form.Q5.answer" :label="form.Q5.question_details" />
-        <InputText v-model="form.Q6.answer" :label="form.Q6.question_details" />
+        <InputText v-model="form.Q5.answer" :id="form.Q5.id" :label="form.Q5.question_details" />
+        <InputText v-model="form.Q6.answer" :id="form.Q6.id" :label="form.Q6.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
       <div v-show="step === 3">
         <h1>Children Information</h1>
-        <InputText v-model="form.Q7.answer" :label="form.Q7.question_details" />
+        <InputText v-model="form.Q7.answer" :id="form.Q7.id" :label="form.Q7.question_details" />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
       <div v-show="step === 4">
         <h1>Primary Residence Information</h1>
-        <InputYesNo v-model="form.Q8.answer" :label="form.Q8.question_details" />
+        <InputYesNo v-model="form.Q8.answer" :id="form.Q8.id" :label="form.Q8.question_details" />
         <div v-if="form.Q8.answer === 'Yes'">
-          <InputYesNo v-model="form.Q9.answer" :label="form.Q9.question_details" />
-          <InputText v-model="form.Q10.answer" :label="form.Q10.question_details" />
+          <InputYesNo v-model="form.Q9.answer" :id="form.Q9.id" :label="form.Q9.question_details" />
+          <InputText
+            v-model="form.Q10.answer"
+            :id="form.Q10.id"
+            :label="form.Q10.question_details"
+          />
         </div>
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
       <div v-show="step === 5">
         <h1>Other Real Estate Information</h1>
-        <InputYesNo v-model="form.Q11.answer" :label="form.Q11.question_details" />
+        <InputYesNo
+          v-model="form.Q11.answer"
+          :id="form.Q11.id"
+          :label="form.Q11.question_details"
+        />
         <InputText
           v-if="form.Q11.answer === 'Yes'"
           v-model="form.Q10_2.answer"
+          :id="form.Q10_2.id"
           :label="form.Q10_2.question_details"
         />
         <div v-else-if="form.Q11.answer === 'No'">
@@ -204,6 +213,7 @@ watch(
           <InputYesNo
             v-if="form.Q12.answer === 'Yes'"
             v-model="form.Q13.answer"
+            :id="form.Q13.id"
             :label="form.Q13.question_details"
           />
         </div>
@@ -211,7 +221,11 @@ watch(
       </div>
       <div v-show="step === 6">
         <h1>Real Estate Value</h1>
-        <InputText v-model="form.Q10_3.answer" :label="form.Q10_3.question_details" />
+        <InputText
+          v-model="form.Q10_3.answer"
+          :id="form.Q10_3.id"
+          :label="form.Q10_3.question_details"
+        />
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
       <div v-show="step === 7">

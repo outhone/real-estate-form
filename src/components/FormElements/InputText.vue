@@ -2,6 +2,7 @@
 // import { ref } from 'vue'
 defineProps<{
   label: string
+  id?: string
 }>()
 const modelValue = defineModel()
 
@@ -17,6 +18,7 @@ const modelValue = defineModel()
       class="text-input"
       type="text"
       :value="modelValue"
+      :id="id"
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
     <!-- <p class="error-msg"></p> -->

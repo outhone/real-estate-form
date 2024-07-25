@@ -197,6 +197,7 @@ watch(
         <BaseInputRadio
           v-model="form.Q3.answer"
           :options="maritalStatus"
+          :id="form.Q3.id"
           :label="form.Q3.question_details"
         />
         <InputYesNo v-model="form.Q4.answer" :id="form.Q4.id" :label="form.Q4.question_details" />

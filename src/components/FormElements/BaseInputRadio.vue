@@ -2,12 +2,13 @@
 defineProps<{
   label: string
   options: string[]
+  id?: string
 }>()
 const modelValue = defineModel()
 </script>
 
 <template>
-  <div class="display-flex-column input-radio-group">
+  <div :id="id" class="display-flex-column input-radio-group">
     <span class="bold">{{ label }}</span>
     <div class="input-radio-options-row">
       <div v-for="opt in options" class="input-radio-option" :key="opt">

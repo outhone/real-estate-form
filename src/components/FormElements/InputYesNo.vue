@@ -1,54 +1,13 @@
 <script setup lang="ts">
+import BaseInputRadio from './BaseInputRadio.vue'
 defineProps<{
   label: string
   id?: string
 }>()
 const modelValue = defineModel()
-const yes = 'Yes'
-const no = 'No'
+const options = ['Yes', 'No']
 </script>
 
 <template>
-  <div class="display-flex-column input-radio-group">
-    <span class="bold">{{ label }}</span>
-    <div class="input-radio-options-row">
-      <div class="input-radio-option">
-        <input
-          type="radio"
-          v-model="modelValue"
-          :checked="yes === modelValue"
-          :value="yes"
-          :id="id"
-          @change="$emit('update:modelValue', yes)"
-        />
-        <span>Yes</span>
-      </div>
-      <div class="input-radio-option">
-        <input
-          type="radio"
-          v-model="modelValue"
-          :checked="no === modelValue"
-          :value="no"
-          :id="id"
-          @change="$emit('update:modelValue', no)"
-        />
-        <span>No</span>
-      </div>
-    </div>
-  </div>
+  <BaseInputRadio v-model="modelValue" :label="label" :options="options" :id="id" />
 </template>
-
-<style>
-.input-radio-group {
-  margin-bottom: 1rem;
-}
-.input-radio-options-row {
-  display: flex;
-}
-.input-radio-option {
-  padding: 0 1rem;
-}
-.input-radio-option > input {
-  margin-right: 0.5rem;
-}
-</style>

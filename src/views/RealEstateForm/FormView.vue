@@ -12,6 +12,7 @@ import { ref, watch } from 'vue'
 
 // Answers and question information for the form
 const form = ref(QuestionsAnswers)
+type QuestionIdType = keyof typeof QuestionsAnswers
 
 // Step is used to track what page is being dislayed
 const step = ref(1)
@@ -150,15 +151,15 @@ function hasChildren() {
 // Loop through all questions that have dependencies and create watchers for them to clear their respecitive fields when updated
 // Improvement: Make this smarter by using QuestionsAnswers values and look for questions with dependencies instead of hardcoded list
 for (let id of ['Q4', 'Q8', 'Q11', 'Q12']) {
-  createWatchers(id)
+  createWatchers(id as QuestionIdType)
 }
-function createWatchers(id: string) {
+function createWatchers(id: QuestionIdType) {
   watch(
     () => form.value[id].answer,
     () => {
       // Improvement: Allow an array of dependencies to clear multiple questions
-      const yesDependence = form.value[id].question_dependencies.yes
-      const noDependence = form.value[id].question_dependencies.no
+      const yesDependence = form.value[id].question_dependencies.yes as QuestionIdType
+      const noDependence = form.value[id].question_dependencies.no as QuestionIdType
       if (noDependence) {
         // Create a watcher for their dependences to deal with nested conditional questions
         createWatchers(noDependence)

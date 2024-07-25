@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import InputText from '@/components/FormElements/InputText.vue'
 import InputYesNo from '@/components/FormElements/InputYesNo.vue'
+import BaseInputRadio from '@/components/FormElements/BaseInputRadio.vue'
 import AnswerPreview from '@/views/RealEstateForm/AnswerPreview.vue'
 import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
 import QuestionsAnswers from '@/views/RealEstateForm/QuestionsAnswers'
 import { ref, watch } from 'vue'
 
-// ToDo: Group questions into their relative steps so that you can use v-for for each section instead?
+// Improvements: Group questions into their relative steps so that you can use v-for for each section instead?
 // ToDo: Create Number and Dropdown input components for better user validation and experience
 
 // Answers and question information for the form
@@ -17,6 +18,9 @@ const step = ref(1)
 
 // Used to display error that all form fields have not been filled out
 const formError = ref(false)
+
+// Marital statuses
+const maritalStatus = ['Single', 'Married', 'Divorced', 'Widowed', 'Domestic Partner']
 
 // Use session storage to store user data . Can be removed.
 if (sessionStorage.getItem('realEstateFormData') !== null) {
@@ -189,7 +193,12 @@ watch(
         <h1>Personal Information</h1>
         <InputText v-model="form.Q1.answer" :id="form.Q1.id" :label="form.Q1.question_details" />
         <InputText v-model="form.Q2.answer" :id="form.Q2.id" :label="form.Q2.question_details" />
-        <InputText v-model="form.Q3.answer" :id="form.Q3.id" :label="form.Q3.question_details" />
+        <!-- <InputText v-model="form.Q3.answer" :id="form.Q3.id" :label="form.Q3.question_details" /> -->
+        <BaseInputRadio
+          v-model="form.Q3.answer"
+          :options="maritalStatus"
+          :label="form.Q3.question_details"
+        />
         <InputYesNo v-model="form.Q4.answer" :id="form.Q4.id" :label="form.Q4.question_details" />
         <PrevNextButtons :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>

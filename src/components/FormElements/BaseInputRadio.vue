@@ -1,38 +1,25 @@
 <script setup lang="ts">
 defineProps<{
   label: string
-  id?: string
+  options: string[]
 }>()
 const modelValue = defineModel()
-const yes = 'Yes'
-const no = 'No'
 </script>
 
 <template>
   <div class="display-flex-column input-radio-group">
     <span class="bold">{{ label }}</span>
     <div class="input-radio-options-row">
-      <div class="input-radio-option">
+      <div v-for="opt in options" class="input-radio-option" :key="opt">
         <input
           type="radio"
           v-model="modelValue"
-          :checked="yes === modelValue"
-          :value="yes"
-          :id="id"
-          @change="$emit('update:modelValue', yes)"
+          :checked="opt === modelValue"
+          :value="opt"
+          :id="opt"
+          @change="$emit('update:modelValue', opt)"
         />
-        <span>Yes</span>
-      </div>
-      <div class="input-radio-option">
-        <input
-          type="radio"
-          v-model="modelValue"
-          :checked="no === modelValue"
-          :value="no"
-          :id="id"
-          @change="$emit('update:modelValue', no)"
-        />
-        <span>No</span>
+        <span>{{ opt }}</span>
       </div>
     </div>
   </div>

@@ -14,13 +14,13 @@ const QuestionsAnswers = {
   },
   Q3: {
     id: 'Q3',
-    question_details: `What is your marital status? (Single, Married, Divorced, Widowed, Domestic Partner)`,
+    question_details: `What is your marital status?`,
     question_dependencies: { yes: '', no: '' },
     answer: ''
   },
   Q4: {
     id: 'Q4',
-    question_details: `Do you have any children? (Yes, No)`,
+    question_details: `Do you have any children?`,
     question_dependencies: { yes: 'Q7', no: '' },
     answer: ''
   },
@@ -44,13 +44,13 @@ const QuestionsAnswers = {
   },
   Q8: {
     id: 'Q8',
-    question_details: `Do you or your partner (if not single) own your primary residence? (Yes, No)`,
+    question_details: `Do you or your partner (if not single) own your primary residence?`,
     question_dependencies: { yes: 'Q9', no: 'Q11' },
     answer: ''
   },
   Q9: {
     id: 'Q9',
-    question_details: `Is your primary residence also your preferred mailing address? (Yes, No)`,
+    question_details: `Is your primary residence also your preferred mailing address?`,
     question_dependencies: { yes: 'Q10', no: 'Q10' },
     answer: ''
   },
@@ -62,7 +62,7 @@ const QuestionsAnswers = {
   },
   Q11: {
     id: 'Q11',
-    question_details: `Do you own any other type of real estate (e.g., vacation, rental, etc.)? (Yes, No)`,
+    question_details: `Do you own any other type of real estate (e.g., vacation, rental, etc.)?`,
     question_dependencies: { yes: 'Q10_2', no: 'Q12' },
     answer: ''
   },
@@ -74,13 +74,13 @@ const QuestionsAnswers = {
   },
   Q12: {
     id: 'Q12',
-    question_details: `Do you want to buy real estate in the future? (Yes, No)`,
+    question_details: `Do you want to buy real estate in the future?`,
     question_dependencies: { yes: 'Q13', no: '' },
     answer: ''
   },
   Q13: {
     id: 'Q13',
-    question_details: `Do you have any financial goals already created? (Yes, No)`,
+    question_details: `Do you have any financial goals already created?`,
     question_dependencies: { yes: '', no: '' },
     answer: ''
   },

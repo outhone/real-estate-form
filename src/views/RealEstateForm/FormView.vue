@@ -7,8 +7,9 @@ import PrevNextButtons from '@/views/RealEstateForm/PrevNextButtons.vue'
 import QuestionsAnswers from '@/views/RealEstateForm/QuestionsAnswers'
 import { ref, watch } from 'vue'
 
+// ToDo: Implement address form when user selection owns property for primary and other real estate
+// Improvements: Create Number or dopdown input components for better user validation and experience
 // Improvements: Group questions into their relative steps so that you can use v-for for each section instead?
-// ToDo: Create Number and Dropdown input components for better user validation and experience
 
 // Answers and question information for the form
 const form = ref(QuestionsAnswers)
@@ -142,6 +143,7 @@ function validateStep(step: number) {
   } else if (step === 3 && !form.value.Q7.answer) {
     return false
   } else if (step === 4) {
+    // ToDo: Check if address form has been completed filled out if Q8 is Yes
     if (!form.value.Q8.answer) {
       return false
     } else if (
@@ -151,6 +153,7 @@ function validateStep(step: number) {
       return false
     }
   } else if (step === 5) {
+    // ToDo: Check if address form has been completed filled out if Q11 is Yes
     if (!form.value.Q11.answer) {
       return false
     } else if (form.value.Q11.answer === 'Yes' && !form.value.Q10_2.answer) {
@@ -168,6 +171,7 @@ function validateStep(step: number) {
 
 // Based on form input, return if user as a partner
 function hasPartner() {
+  // Can remove toLowerCase now since input was updated to radio selection, but is needed if input is reverted back to text input
   const answer = form.value.Q3.answer.toLowerCase()
   if (answer === 'married' || answer === 'domestic partner') {
     return true
@@ -225,6 +229,7 @@ function hasChildren() {
             :id="form.Q10.id"
             :label="form.Q10.question_details"
           />
+          <!-- ToDo: Display address form -->
         </div>
         <PrevNextButtons :prev="true" :next="true" @nextStep="nextStep" @prevStep="previousStep" />
       </div>
@@ -241,6 +246,7 @@ function hasChildren() {
           :id="form.Q10_2.id"
           :label="form.Q10_2.question_details"
         />
+        <!-- ToDo: Display address form -->
         <div v-else-if="form.Q11.answer === 'No'">
           <InputYesNo v-model="form.Q12.answer" :label="form.Q12.question_details" />
           <InputYesNo

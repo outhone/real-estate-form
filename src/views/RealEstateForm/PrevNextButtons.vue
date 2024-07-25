@@ -7,8 +7,8 @@ defineProps<{
 
 <template>
   <div id="nav-buttons" class="nav-btn-group">
-    <button class="btn" v-if="prev" @click="$emit('prevStep')">Previous</button>
-    <button class="btn" v-if="next" @click="$emit('nextStep')">Next</button>
+    <button id="prev-btn" class="btn" v-if="prev" @click="$emit('prevStep')">Previous</button>
+    <button id="next-btn" class="btn" v-if="next" @click="$emit('nextStep')">Next</button>
   </div>
 </template>
 

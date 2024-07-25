@@ -22,11 +22,11 @@ const formError = ref(false)
 // Marital statuses
 const maritalStatus = ['Single', 'Married', 'Divorced', 'Widowed', 'Domestic Partner']
 
-// Use session storage to store user data . Can be removed.
-if (sessionStorage.getItem('realEstateFormData') !== null) {
-  form.value = JSON.parse(sessionStorage.getItem('realEstateFormData') || '{}')
-  step.value = JSON.parse(sessionStorage.getItem('realEstateFormStep') || '{}')
-}
+// Use session storage to store user data . Can be enabled, enable watcher below to sync up session storage if being used
+// if (sessionStorage.getItem('realEstateFormData') !== null) {
+//   form.value = JSON.parse(sessionStorage.getItem('realEstateFormData') || '{}')
+//   step.value = JSON.parse(sessionStorage.getItem('realEstateFormStep') || '{}')
+// }
 
 // ToDo: Use group of questions method idea instead of pages? => ex qg1=[Q1,Q2,Q3,Q4], qg2=[] single was selected, qg3=[Q7]
 // Or use an array of steps/pages that a user can get to based on dependences ex [1,4,6]. When a page/step is removed from array clear all form fields on that pages
@@ -138,12 +138,13 @@ function hasChildren() {
   }
 }
 
-// Update session store with updated values when step or form field changes. Session storage can be removed if not wanted.
-// Clear step page error message as well
+// Events to do when step or form answer changes
 watch([step, form.value], () => {
-  sessionStorage.setItem('realEstateFormData', JSON.stringify(form.value))
-  sessionStorage.setItem('realEstateFormStep', JSON.stringify(step.value))
+  // Clear form error message
   formError.value = false
+  // If session storage is enabled to store user form answers uncomment
+  // sessionStorage.setItem('realEstateFormData', JSON.stringify(form.value))
+  // sessionStorage.setItem('realEstateFormStep', JSON.stringify(step.value))
 })
 
 // Loop through all questions that have dependencies and create watchers for them to clear their respecitive fields when updated
